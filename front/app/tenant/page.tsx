@@ -13,7 +13,7 @@ import {
   StarIcon,
   HomeIcon,
   WalletIcon,
-  
+
   MessageCircleIcon,
   BellIcon,
   SettingsIcon,
@@ -28,7 +28,7 @@ import {
 import PaymentModal from '@/components/PaymentModal'
 import ViewHouses from "@/components/ViewHouses";
 
-const  Page = () => {
+const Page = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [showAgreement, setShowAgreement] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -43,11 +43,11 @@ const  Page = () => {
   const propertyTypes = ['Apartment', 'House', 'Condo', 'Studio'];
   const amenities = ['Parking', 'Pool', 'Gym', 'Pet Friendly', 'Furnished'];
 
-  const handleInterested= ()=>{
-    try{
+  const handleInterested = () => {
+    try {
 
 
-    }catch(e){
+    } catch (e) {
       console.log('err in handling user interest', e);
     }
   }
@@ -188,7 +188,7 @@ const  Page = () => {
               <span className="ml-2 text-gray-600">({property.reviews.length} reviews)</span>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div className="flex items-center gap-2">
               <Badge variant="outline">{property.bedrooms} Beds</Badge>
@@ -219,8 +219,8 @@ const  Page = () => {
                 </div>
               </div>
               <Button onClick={() => setSelectedProperty(prev => (prev?.id === property.id ? null : property))}>
-  View Details
-</Button>
+                View Details
+              </Button>
             </div>
           </div>
         </div>
@@ -241,9 +241,8 @@ const  Page = () => {
           {notifications.map(notification => (
             <div
               key={notification.id}
-              className={`flex items-center gap-2 p-3 rounded-lg ${
-                notification.type === 'warning' ? 'bg-yellow-50' : 'bg-blue-50'
-              }`}
+              className={`flex items-center gap-2 p-3 rounded-lg ${notification.type === 'warning' ? 'bg-yellow-50' : 'bg-blue-50'
+                }`}
             >
               {notification.type === 'warning' ? (
                 <AlertCircleIcon className="w-5 h-5 text-yellow-500" />
@@ -277,7 +276,7 @@ const  Page = () => {
               <Button size="lg" onClick={() => setModalOpen(true)}>Pay Now</Button>
               <PaymentModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
             </div>
-            
+
             <div>
               <div className="flex justify-between text-sm mb-2">
                 <span>Payment Progress</span>
@@ -440,73 +439,73 @@ const  Page = () => {
             </div>
 
             {selectedProperty && (
-  <div>
-    <Card className="mt-6">
-      <CardHeader>
-        <CardTitle>Property Details</CardTitle>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setSelectedProperty(null)}
-          className="absolute top-4 right-4"
-        >
-          Close
-        </Button>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <img
-              src={selectedProperty.images[0]}
-              alt={selectedProperty.address}
-              className="w-full h-64 object-cover rounded-lg"
-            />
-            <div className="mt-4 space-y-4">
               <div>
-                <h3 className="text-xl font-semibold">{selectedProperty.address}</h3>
-                <p className="text-gray-600">${selectedProperty.rent}/month</p>
-              </div>
-              <div className="flex gap-2">
-                <Badge>{selectedProperty.bedrooms} Beds</Badge>
-                <Badge>{selectedProperty.bathrooms} Baths</Badge>
-                <Badge>{selectedProperty.type}</Badge>
-              </div>
-            </div>
-          </div>
+                <Card className="mt-6">
+                  <CardHeader>
+                    <CardTitle>Property Details</CardTitle>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSelectedProperty(null)}
+                      className="absolute top-4 right-4"
+                    >
+                      Close
+                    </Button>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <img
+                          src={selectedProperty.images[0]}
+                          alt={selectedProperty.address}
+                          className="w-full h-64 object-cover rounded-lg"
+                        />
+                        <div className="mt-4 space-y-4">
+                          <div>
+                            <h3 className="text-xl font-semibold">{selectedProperty.address}</h3>
+                            <p className="text-gray-600">${selectedProperty.rent}/month</p>
+                          </div>
+                          <div className="flex gap-2">
+                            <Badge>{selectedProperty.bedrooms} Beds</Badge>
+                            <Badge>{selectedProperty.bathrooms} Baths</Badge>
+                            <Badge>{selectedProperty.type}</Badge>
+                          </div>
+                        </div>
+                      </div>
 
-          <div className="space-y-6">
-            <div>
-              <h4 className="font-medium mb-2">Reviews</h4>
-              <div className="space-y-4">
-                {selectedProperty.reviews.map((review, i) => (
-                  <div key={i} className="border-b pb-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="font-medium">{review.user}</span>
-                      <div className="flex items-center">
-                        <StarIcon className="w-4 h-4 text-yellow-400" />
-                        <span className="ml-1">{review.rating}</span>
+                      <div className="space-y-6">
+                        <div>
+                          <h4 className="font-medium mb-2">Reviews</h4>
+                          <div className="space-y-4">
+                            {selectedProperty.reviews.map((review, i) => (
+                              <div key={i} className="border-b pb-4">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <span className="font-medium">{review.user}</span>
+                                  <div className="flex items-center">
+                                    <StarIcon className="w-4 h-4 text-yellow-400" />
+                                    <span className="ml-1">{review.rating}</span>
+                                  </div>
+                                </div>
+                                <p className="text-gray-700">{review.comment}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="flex gap-4">
+                          <Button className="flex-1" style={{ backgroundColor: 'green' }}>
+                            Interested
+                          </Button>
+                          <Button variant="outline" className="flex-1">
+                            Contact Landlord
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                    <p className="text-gray-700">{review.comment}</p>
-                  </div>
-                ))}
+                  </CardContent>
+                </Card>
               </div>
-            </div>
-
-            <div className="flex gap-4">
-              <Button className="flex-1" style={{ backgroundColor: 'green' }}>
-                Interested
-              </Button>
-              <Button variant="outline" className="flex-1">
-                Contact Landlord
-              </Button>
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  </div>
-)}
+            )}
 
           </TabsContent>
 
@@ -538,8 +537,8 @@ const  Page = () => {
                         </div>
                         <Badge>{agreement.status}</Badge>
                       </div>
-                      
-                      <div className="space-y-4">
+
+                      <div className="space-y-4 w-full">
                         <div>
                           <h4 className="font-medium mb-2">Documents</h4>
                           <div className="flex gap-2">
@@ -551,45 +550,45 @@ const  Page = () => {
                             ))}
                           </div>
                         </div>
-                        
-                        <div className="flex gap-2">
-                        <Button
-                  variant="outline"
-                  
-                  onClick={() => setShowAgreement(!showAgreement)}
-                >
-                  {showAgreement ? "Hide Details" : "View Details"}
-                </Button>
 
-                {/* ✅ Conditionally Render Agreement Details */}
-                {showAgreement && (
-                  <div className="mt-4 border p-4 rounded bg-gray-100">
-                    <p>
-                      <strong>Property Address:</strong> panvel
-                    </p>
-                    <p>
-                      <strong>Landlord ETH Address:</strong> 0x1234567890abcdef
-                    </p>
-                    <p>
-                      <strong>Tenant ETH Address:</strong> 0xabcdef1234567890
-                    </p>
-                    <p>
-                      <strong>Rent Amount:</strong> 2.5 ETH
-                    </p>
-                    <p>
-                      <strong>Deposit Amount:</strong> 5 ETH
-                    </p>
-                    <p>
-                      <strong>Policy Start Date:</strong> 2025-02-01
-                    </p>
-                    <p>
-                      <strong>Policy End Date:</strong> 2026-02-01
-                    </p>
-                    <p>
-                      <strong>Rent Due Date:</strong> 1st of every month
-                    </p>
-                  </div>
-                )}
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+
+                            onClick={() => setShowAgreement(!showAgreement)}
+                          >
+                            {showAgreement ? "Hide Details" : "View Details"}
+                          </Button>
+
+                          {/* ✅ Conditionally Render Agreement Details */}
+                          {showAgreement && (
+                            <div className="mt-4 border p-4 rounded bg-gray-100">
+                              <p>
+                                <strong>Property Address:</strong> panvel
+                              </p>
+                              <p>
+                                <strong>Landlord ETH Address:</strong> 0x1234567890abcdef
+                              </p>
+                              <p>
+                                <strong>Tenant ETH Address:</strong> 0xabcdef1234567890
+                              </p>
+                              <p>
+                                <strong>Rent Amount:</strong> 2.5 ETH
+                              </p>
+                              <p>
+                                <strong>Deposit Amount:</strong> 5 ETH
+                              </p>
+                              <p>
+                                <strong>Policy Start Date:</strong> 2025-02-01
+                              </p>
+                              <p>
+                                <strong>Policy End Date:</strong> 2026-02-01
+                              </p>
+                              <p>
+                                <strong>Rent Due Date:</strong> 1st of every month
+                              </p>
+                            </div>
+                          )}
                           <Button variant="outline">Request Changes</Button>
                         </div>
                       </div>
@@ -610,11 +609,11 @@ const  Page = () => {
 
 
           <TabsContent value="view">
-  <ViewHouses />
-</TabsContent>
+            <ViewHouses />
+          </TabsContent>
 
 
-  
+
 
           <TabsContent value="calendar" className="space-y-6">
             <Card>
@@ -662,10 +661,10 @@ const  Page = () => {
           </TabsContent>
         </Tabs>
 
-        
+
       </div>
     </div>
   );
 };
 
-export default  Page;
+export default Page;

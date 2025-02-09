@@ -1,3 +1,5 @@
+// api.js
+
 // Function to fetch disputes
 export const getDisputes = async () => {
     try {
@@ -12,7 +14,7 @@ export const getDisputes = async () => {
     }
 };
 
-// Function to fetch notifications (if needed)
+// Function to fetch notifications
 export const getNotifications = async () => {
     try {
         const res = await fetch('/api/notifications'); // Replace with your API endpoint
@@ -26,10 +28,24 @@ export const getNotifications = async () => {
     }
 };
 
+// Function to fetch dispute details
+export const getDisputeDetails = async (disputeId) => {
+    try {
+        const res = await fetch(`/api/disputes/${disputeId}`);
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return await res.json();
+    } catch (error) {
+        console.error("Error fetching dispute details:", error);
+        throw error;
+    }
+};
 
+// Function to vote on a dispute
 export const voteOnDisputeApi = async (disputeId, voteType) => {
     try {
-        const res = await fetch('/api/disputes/${disputeId}/vote', {
+        const res = await fetch(`/api/disputes/${disputeId}/vote`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

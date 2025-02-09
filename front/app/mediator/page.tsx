@@ -72,11 +72,11 @@ const Page = () => {
         setIsNotificationOpen(false);
         router.push(`/dispute/${notification.disputeId}`);
     };
-    
+
     const handleViewDetails = (dispute) => {
         router.push(`/dispute/${dispute.id}`);
     };
-    
+
 
     const voteOnDispute = async (disputeId, voteType) => {
         try {
@@ -93,7 +93,7 @@ const Page = () => {
 
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="bg-gray-50 p-4 rounded-lg mb-6">
             <div className="container mx-auto p-6 space-y-6">
                 {/* Header */}
                 <div className="flex justify-between items-start">
@@ -102,10 +102,10 @@ const Page = () => {
                         <p className="text-gray-600">Manage disputes and agreements</p>
                     </div>
                     <div className="flex gap-4">
-                        <Button variant="outline" onClick={connectWallet}>
+                        {/* <Button variant="outline" onClick={connectWallet}>
                             <WalletIcon className="mr-2 h-4 w-4" />
                             {isConnected ? 'Connected' : 'Connect Wallet'}
-                        </Button>
+                        </Button> */}
                         <Button variant="outline" onClick={() => setIsNotificationOpen(true)}>
                             <BellIcon className="mr-2 h-4 w-4" />
                             Notifications {notifications.length > 0 && <span className="bg-red-500 text-white rounded-full px-2 py-1 text-xs ml-2">{notifications.length}</span>}
@@ -131,7 +131,7 @@ const Page = () => {
                             <MessageCircleIcon className="mr-2 h-4 w-4" />
                             Disputes
                         </TabsTrigger>
-                      
+
                     </TabsList>
 
                     {/* Disputes Tab */}
@@ -139,11 +139,11 @@ const Page = () => {
                         <DisputesTab disputes={disputes} onViewDetails={handleViewDetails} voteOnDispute={voteOnDispute} />
                     </TabsContent>
 
-                
 
-                  
 
-                    
+
+
+
                 </Tabs>
 
 
