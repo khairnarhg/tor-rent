@@ -39,6 +39,8 @@ const CreateAgreementDialog: React.FC<CreateAgreementProps> = ({ showNewAgreemen
         }
     };
 
+ 
+
     return (
         <Dialog open={showNewAgreementDialog} onOpenChange={(open) => setShowNewAgreementDialog(open)}>
             <DialogContent className="max-h-[80vh] overflow-y-auto">

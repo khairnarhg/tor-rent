@@ -7,7 +7,8 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AgreementsTab from '@/components/AgreementsTab'; // Import your tab components
-import AgreementListTab from '@/components/AgreementsListTab'
+// import AgreementListTab from '@/components/AgreementsListTab'
+import AgreementsPage from '@/components/AgreementsPage';
 import PaymentsTab from '@/components/PaymentsTab';
 import DisputesTab from '@/components/DisputesTab';
 import DocumentsTab from '@/components/DocumentsTab';

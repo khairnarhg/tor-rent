@@ -19,53 +19,55 @@ const PaymentModal = ({ isOpen, onClose, amount = 100 }) => {
     });
 
     const handlePayment = async () => {
-        console.log('cardDetails;', cardDetails)
-        console.log('inside handlePayement function')
-        if ((paymentMethod === 'credit' || paymentMethod === 'debit') && !cardDetails.cardNumber) {
-            alert('Please enter card details');
-            return;
-        }
-
-        const generatedId = '0x' + [...Array(64)].map(() => (Math.random() * 16 | 0).toString(16)).join('');
-        setTransactionId(generatedId);
-
-
-        try {
-            const hashedCardNumber = await bcrypt.hash(cardDetails.cardNumber, 10);
-            const hashedCvv = await bcrypt.hash(cardDetails.cvv, 10);
-
-            const paymentDetails = {
-                sender: 'sender@example.com', // Replace with actual sender details
-                recipient: 'recipient@example.com', // Replace with actual recipient details
-                transactionId: generatedId,
-                timestamp: Date.now(),
-                ipAddress: '192.168.1.1', // Replace with actual IP address
-                cardNumber: hashedCardNumber,
-                cvv: hashedCvv,
-                amount: amount,
-                paymentMethod: paymentMethod,
-            };
-
-            const response = await fetch('/api/savePayment', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(paymentDetails),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json(); // Get error details from the server
-                throw new Error(`Payment failed: ${response.status} - ${errorData.error || 'Unknown error'}`);
-            }
-
-
-            setPaymentSuccess(true);
-        } catch (error) {
-            console.error('Error saving payment data:', error);
-            // alert(error.message); // Show the error message to the user
-        }
-    };
+      console.log('cardDetails;', cardDetails);
+      console.log('inside handlePayment function');
+  
+      if ((paymentMethod === 'credit' || paymentMethod === 'debit') && !cardDetails.cardNumber) {
+          alert('Please enter card details');
+          return;
+      }
+  
+      const generatedId = '0x' + [...Array(64)].map(() => (Math.random() * 16 | 0).toString(16)).join('');
+      setTransactionId(generatedId);
+  
+      try {
+          const hashedCardNumber = await bcrypt.hash(cardDetails.cardNumber, 10);
+          const hashedCvv = await bcrypt.hash(cardDetails.cvv, 10);
+  
+          const paymentDetails = {
+              sender: 'sender@example.com', // Replace with actual sender details (e.g., wallet address)
+              recipient: 'recipient@example.com', // Replace with actual recipient details (landlord)
+              transactionId: generatedId,
+              timestamp: Date.now(),
+              ipAddress: '192.168.1.1', // Replace with actual IP address
+              cardNumber: hashedCardNumber,
+              cvv: hashedCvv,
+              amount: amount,
+              paymentMethod: paymentMethod,
+          };
+  
+          const response = await fetch('http://localhost:5000/payRent', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(paymentDetails),
+          });
+  
+          if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(`Payment failed: ${response.status} - ${errorData.error || 'Unknown error'}`);
+          }
+  
+          const result = await response.json();
+          setPaymentSuccess(true);
+          console.log('Transaction Hash:', result.transactionHash);
+          alert("transaction success, hash:", result.transactionHash) // Handle the result if needed
+  
+      } catch (error) {
+          console.error('Error saving payment data:', error);
+      }
+  };
 
   const PaymentMethodCard = ({ title, icon: Icon, value }) => (
     <Card 

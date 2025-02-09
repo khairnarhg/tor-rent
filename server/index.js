@@ -118,5 +118,34 @@ app.post("/signAgreement", async (req, res) => {
     }
 });
 
+app.post("/payRent", async (req, res) => {
+    try {
+        const { tenantAddress } = req.body;
+
+        if (!tenantAddress) {
+            return res.status(400).json({ error: "Tenant address is required." });
+        }
+
+        // Fetch the rent amount from the contract 
+        const rentAmount = await RAcontract.getRentAmount(); // Assuming `getRentAmount` is a function in the contract that 
+
+        if (!rentAmount) {
+            return res.status(400).json({ error: "Could not fetch rent amount from the contract." });
+        }
+
+        // Convert the rent amount to the appropriate units (Wei)
+        const rentInWei = ethers.parseEther(rentAmount.toString());
+
+        // Perform the payment transaction
+        const tx = await RAcontract.payRent({ value: rentInWei, from: tenantAddress });
+        await tx.wait();
+
+        res.json({ message: "Rent paid successfully", txHash: tx.hash });
+    } catch (err) {
+        console.error("Error processing rent payment:", err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // Start Express Server
 app.listen(5000, () => console.log("Server running on port 5000"));
