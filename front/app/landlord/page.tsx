@@ -7,9 +7,10 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AgreementsTab from '@/components/AgreementsTab'; // Import your tab components
-import AgreementListTab from '@/components/AgreementsListTab'
+import DisputeListTab from '@/components/DisputeListTab'
 import PaymentsTab from '@/components/PaymentsTab';
-import DisputesTab from '@/components/DisputesTab';
+import PaymentsHistory from '@/components/PaymentHistory';
+// import DisputesTab from '@/components/DisputesTab';
 import DocumentsTab from '@/components/DocumentsTab';
 import HomesTab from '@/components/HomesTab';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -89,13 +90,13 @@ const Page = () => {
                 </TabsList>
 
                 <TabsContent value="agreements">
-                    <AgreementsTab />
+                    {/* <AgreementsTab /> */}
                 </TabsContent>
                 <TabsContent value="payments">
-                    <PaymentsTab />
+                    <PaymentsHistory />
                 </TabsContent>
                 <TabsContent value="disputes">
-                    <DisputesTab />
+                    <DisputeListTab />
                 </TabsContent>
                 <TabsContent value="documents">
                     <DocumentsTab />
