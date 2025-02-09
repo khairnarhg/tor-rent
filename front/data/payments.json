@@ -1,0 +1,11 @@
+[
+  {
+    "sender": "sender@example.com",
+    "recipient": "recipient@example.com",
+    "transactionId": "0x4c3f00ce1a66fee3c8f4f235c434bdedc2228f886882d2ba0e6c9431f6847c62",
+    "timestamp": "2025-02-08T18:06:42.051Z",
+    "ipAddress": "192.168.1.1",
+    "cardNumber": "$2a$10$4NKswuDfcfpRffbMaaFEEuOTkV.OQYkpRNWdEx4G84LWWQV835oRG",
+    "cvv": "$2a$10$sznTLeZs.7hcLzlgGq.S3e8VuTnhs1ilkJAEEEuwRGmctsyxbg7um"
+  }
+]
