@@ -7,7 +7,7 @@ const Header = () => {
     <header className="bg-white shadow-md py-4">
       <div className="container mx-auto flex justify-center">
         <Link href="/" className="text-5xl font-extrabold text-primary">
-          BlockRent
+          Tor-Rent
         </Link>
       </div>
     </header>

@@ -8,7 +8,7 @@ import type React from "react" // Added import for React
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
-  title: "BlockRent - Blockchain-based Rental Agreements",
+  title: "Tor-Rent - Blockchain-based Rental Agreements",
   description: "Secure and automated rental agreements using blockchain technology",
 }
 

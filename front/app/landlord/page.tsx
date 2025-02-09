@@ -10,7 +10,8 @@ import AgreementsTab from '@/components/AgreementsTab'; // Import your tab compo
 // import AgreementListTab from '@/components/AgreementsListTab'
 import AgreementsPage from '@/components/AgreementsPage';
 import PaymentsTab from '@/components/PaymentsTab';
-import DisputesTab from '@/components/DisputesTab';
+import PaymentsHistory from '@/components/PaymentHistory';
+// import DisputesTab from '@/components/DisputesTab';
 import DocumentsTab from '@/components/DocumentsTab';
 import HomesTab from '@/components/HomesTab';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -93,10 +94,10 @@ const Page = () => {
                     <AgreementsPage />
                 </TabsContent>
                 <TabsContent value="payments">
-                    <PaymentsTab />
+                    <PaymentsHistory />
                 </TabsContent>
                 <TabsContent value="disputes">
-                    <DisputesTab />
+                    <DisputeListTab />
                 </TabsContent>
                 <TabsContent value="documents">
                     <DocumentsTab />

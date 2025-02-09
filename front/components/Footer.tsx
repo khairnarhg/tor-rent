@@ -21,7 +21,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="mt-8 pt-8 border-t border-gray-200 text-center">
-          <p className="text-sm text-gray-600">© {new Date().getFullYear()} BlockRent. All rights reserved.</p>
+          <p className="text-sm text-gray-600">© {new Date().getFullYear()} Tor-Rent. All rights reserved.</p>
           <div className="mt-2">
             <Link href="/terms" className="text-sm text-gray-600 hover:text-primary mr-4">
               Terms & Conditions
