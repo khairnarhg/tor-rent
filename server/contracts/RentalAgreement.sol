@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
+import "./IdentityVerification.sol"; // Import the IdentityVerification contract
+
 contract RentalAgreement {
-    
+    IdentityVerification identityVerification; // Reference to the IdentityVerification contract
+
     enum Role { None, Landlord, Tenant }
 
     struct Agreement {
@@ -13,9 +16,9 @@ contract RentalAgreement {
     string propertyAddress;
     uint256 rentAmount;
     uint256 securityDeposit;
+    uint256 startDate; // Added
+    uint256 endDate;   // Added
     uint256 dueDate;
-    uint256 startDate; // New: Agreement Start Date
-    uint256 endDate;   // New: Agreement End Date
     bool isSigned;
     bool isActive;
 }
@@ -59,45 +62,51 @@ contract RentalAgreement {
         _;
     }
 
-    constructor() {}
+    constructor(address _identityVerificationAddress) {
+        identityVerification = IdentityVerification(_identityVerificationAddress);
+    }
 
     function setUserRole(address _user, Role _role) external {
         // Ensure only an admin (or any other form of control mechanism) can assign roles
         userRoles[_user] = _role;
     }
 
-        function createAgreement(
-        string memory _landlordName,
-        string memory _tenantName,
-        string memory _propertyAddress,
-        uint256 _rentAmount,
-        uint256 _securityDeposit,
-        uint256 _dueDate,
-        uint256 _startDate, // New: Agreement Start Date
-        uint256 _endDate    // New: Agreement End Date
-    ) external onlyRole(Role.Landlord) {
-        require(_endDate > _startDate, "End date must be after start date");
+ function createAgreement(
+    string memory _landlordName,
+    string memory _tenantName,
+    string memory _propertyAddress,
+    uint256 _rentAmount,
+    uint256 _securityDeposit,
+    uint256 _startDate, // Added
+    uint256 _endDate,   // Added
+    uint256 _dueDate
+) external onlyRole(Role.Landlord) {
+    require(identityVerification.isUserVerified(msg.sender), "Landlord is not verified");
 
-        agreementCounter++;
-        agreements[agreementCounter] = Agreement(
-            msg.sender,
-            address(0),
-            _landlordName,
-            _tenantName,
-            _propertyAddress,
-            _rentAmount,
-            _securityDeposit,
-            _dueDate,
-            _startDate, // Store start date
-            _endDate,   // Store end date
-            false,
-            false
-        );
-        emit AgreementCreated(agreementCounter, msg.sender, _rentAmount);
-    }
+    agreementCounter++;
+    agreements[agreementCounter] = Agreement(
+        msg.sender,
+        address(0),
+        _landlordName,
+        _tenantName,
+        _propertyAddress,
+        _rentAmount,
+        _securityDeposit,
+        _startDate, // Added
+        _endDate,   // Added
+        _dueDate,
+        false,
+        false
+    );
+
+    emit AgreementCreated(agreementCounter, msg.sender, _rentAmount);
+}
 
 
     function signAgreement(uint256 _agreementId) external onlyRole(Role.Tenant) {
+        // Check if the tenant is verified
+        require(identityVerification.isUserVerified(msg.sender), "Tenant is not verified");
+
         Agreement storage agreement = agreements[_agreementId];
         require(!agreement.isSigned, "Agreement already signed");
         agreement.tenant = msg.sender;
@@ -150,32 +159,36 @@ contract RentalAgreement {
         emit AgreementUpdated(_agreementId);
     }
 
-    function getAgreementDetails(uint256 _agreementId) external view returns (
-        address landlord,
-        address tenant,
-        string memory landlordName,
-        string memory tenantName,
-        string memory propertyAddress,
-        uint256 rentAmount,
-        uint256 securityDeposit,
-        uint256 dueDate,
-        bool isSigned,
-        bool isActive
-    ) {
-        Agreement storage agreement = agreements[_agreementId];
-        return (
-            agreement.landlord,
-            agreement.tenant,
-            agreement.landlordName,
-            agreement.tenantName,
-            agreement.propertyAddress,
-            agreement.rentAmount,
-            agreement.securityDeposit,
-            agreement.dueDate,
-            agreement.isSigned,
-            agreement.isActive
-        );
-    }
+function getAgreementDetails(uint256 _agreementId) external view returns (
+    address landlord,
+    address tenant,
+    string memory landlordName,
+    string memory tenantName,
+    string memory propertyAddress,
+    uint256 rentAmount,
+    uint256 securityDeposit,
+    uint256 startDate,
+    uint256 endDate,
+    uint256 dueDate,
+    bool isSigned,
+    bool isActive
+) {
+    Agreement storage agreement = agreements[_agreementId];
+    return (
+        agreement.landlord,
+        agreement.tenant,
+        agreement.landlordName,
+        agreement.tenantName,
+        agreement.propertyAddress,
+        agreement.rentAmount,
+        agreement.securityDeposit,
+        agreement.startDate,
+        agreement.endDate,
+        agreement.dueDate,
+        agreement.isSigned,
+        agreement.isActive
+    );
+}
 
     function getPaymentHistory(uint256 _agreementId) external view returns (Payment[] memory) {
         return paymentHistory[_agreementId];

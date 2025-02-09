@@ -1,16 +1,16 @@
 import { useState, ChangeEvent } from "react";
 import axios from "axios";
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 
 interface CreateAgreementProps {
     showNewAgreementDialog: boolean;
     setShowNewAgreementDialog: (show: boolean) => void;
+    fetchAgreements: () => void; // Refresh agreements list after creation
 }
 
-const CreateAgreementDialog: React.FC<CreateAgreementProps> = ({ showNewAgreementDialog, setShowNewAgreementDialog }) => {
+const CreateAgreementDialog: React.FC<CreateAgreementProps> = ({ showNewAgreementDialog, setShowNewAgreementDialog, fetchAgreements }) => {
     const [formData, setFormData] = useState({
         landlordName: "",
         tenantName: "",
@@ -18,8 +18,8 @@ const CreateAgreementDialog: React.FC<CreateAgreementProps> = ({ showNewAgreemen
         rentAmount: "",
         securityDeposit: "",
         dueDate: "",
-        startDate: "", // Added start date
-        endDate: ""    // Added end date
+        startDate: "",
+        endDate: ""
     });
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -29,9 +29,10 @@ const CreateAgreementDialog: React.FC<CreateAgreementProps> = ({ showNewAgreemen
     const handleCreateAgreement = async () => {
         try {
             const response = await axios.post("http://localhost:5000/createAgreement", formData);
-
             alert(`Agreement Created Successfully!\nTx Hash: ${response.data.txHash}`);
-            setShowNewAgreementDialog(false);
+
+            fetchAgreements(); // Refresh agreements list
+            setShowNewAgreementDialog(false); // Close dialog
         } catch (error) {
             console.error("Error creating agreement:", error);
             alert("Failed to create agreement.");
@@ -39,13 +40,7 @@ const CreateAgreementDialog: React.FC<CreateAgreementProps> = ({ showNewAgreemen
     };
 
     return (
-        <Dialog open={showNewAgreementDialog} onOpenChange={setShowNewAgreementDialog}>
-            <DialogTrigger asChild>
-                <Button className="mb-6 bg-green-600">
-                    <Plus className="h-4 w-4 mr-2" />
-                    Create New Agreement
-                </Button>
-            </DialogTrigger>
+        <Dialog open={showNewAgreementDialog} onOpenChange={(open) => setShowNewAgreementDialog(open)}>
             <DialogContent className="max-h-[80vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>Create New Rental Agreement</DialogTitle>
@@ -57,11 +52,11 @@ const CreateAgreementDialog: React.FC<CreateAgreementProps> = ({ showNewAgreemen
                     <Input name="propertyAddress" placeholder="Property Address" onChange={handleChange} />
                     <Input name="rentAmount" type="number" placeholder="Rent Amount (ETH)" onChange={handleChange} />
                     <Input name="securityDeposit" type="number" placeholder="Deposit Amount (ETH)" onChange={handleChange} />
-                    <div>Due Date:</div>
+                    <label>Due Date:</label>
                     <Input name="dueDate" type="date" onChange={handleChange} />
-                    <div>Start Date:</div>
+                    <label>Start Date:</label>
                     <Input name="startDate" type="date" onChange={handleChange} />
-                    <div>End Date:</div>
+                    <label>End Date:</label>
                     <Input name="endDate" type="date" onChange={handleChange} />
                     <Button onClick={handleCreateAgreement}>
                         Create Agreement

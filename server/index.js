@@ -9,22 +9,73 @@ app.use(require("cors")());
 const provider = new ethers.JsonRpcProvider(process.env.INFURA_SEPOLIA_URL);
 const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
 
-const contractABI = require("./artifacts/contracts/RentalAgreement.sol/RentalAgreement.json").abi;
-const contractAddress = process.env.CONTRACT_ADDRESS;
-const contract = new ethers.Contract(contractAddress, contractABI, wallet);
+// Rental Agreement Contract
+const RAcontractABI = require("./artifacts/contracts/RentalAgreement.sol/RentalAgreement.json").abi;
+const RAcontractAddress = process.env.CONTRACT_ADDRESS_RA;
+const RAcontract = new ethers.Contract(RAcontractAddress, RAcontractABI, wallet);
 
-// 🔹 Create Agreement API
+// Identity Verification Contract
+const IVcontractABI = require("./artifacts/contracts/IdentityVerification.sol/IdentityVerification.json").abi;
+const IVcontractAddress = process.env.CONTRACT_ADDRESS_IV;
+const walletIV = new ethers.Wallet(process.env.PRIVATE_KEY_IV, provider);
+const IVcontract = new ethers.Contract(IVcontractAddress, IVcontractABI, walletIV);
+
+app.post("/verifyUser", async (req, res) => {
+    try {
+        const { userAddress, role } = req.body;
+
+        if (!userAddress || !role) {
+            return res.status(400).json({ error: "User address and role are required." });
+        }
+
+        // Get the owner of the contract
+        const owner = await IVcontract.owner();
+        
+        // // Check if the sender is the owner (you would replace 'senderAddress' with the actual sender's address)
+        // const senderAddress = req.body.senderAddress; // Get the sender's address from the frontend request (if it's passed)
+
+        // if (senderAddress.toLowerCase() !== owner.toLowerCase()) {
+        //     return res.status(403).json({ error: "Only the owner can verify users." });
+        // }
+
+        // Send transaction to verify user and assign role
+        const tx = await IVcontract.verifyUser(userAddress, role);
+        await tx.wait();
+
+        res.json({ message: "User verified successfully", txHash: tx.hash });
+    } catch (err) {
+        console.error("Error verifying user:", err);
+        res.status(500).json({ error: err.message });
+    }
+});
+// 🔹 Check if User is Verified API
+app.get("/isUserVerified", async (req, res) => {
+    try {
+        const { userAddress } = req.query;
+
+        if (!userAddress) {
+            return res.status(400).json({ error: "User address is required." });
+        }
+
+        const isVerified = await IVcontract.isUserVerified(userAddress);
+        res.json({ isVerified });
+    } catch (err) {
+        console.error("Error checking user verification:", err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// 🔹 Create Rental Agreement
 app.post("/createAgreement", async (req, res) => {
     try {
         const { landlordName, tenantName, propertyAddress, rentAmount, securityDeposit, startDate, endDate, dueDate } = req.body;
-
         console.log('body:', req.body);
 
         if (!rentAmount || !securityDeposit) {
             return res.status(400).json({ error: "Rent amount and security deposit are required." });
         }
 
-        // Convert ETH values to Wei using ethers.js
+        // Convert ETH values to Wei
         const rentInWei = ethers.parseEther(rentAmount.toString()); 
         const depositInWei = ethers.parseEther(securityDeposit.toString()); 
 
@@ -33,8 +84,8 @@ app.post("/createAgreement", async (req, res) => {
         const endDateUnix = Math.floor(new Date(endDate).getTime() / 1000);
         const dueDateUnix = Math.floor(new Date(dueDate).getTime() / 1000);
 
-        // Send transaction to the smart contract
-        const tx = await contract.createAgreement(
+        // Send transaction
+        const tx = await RAcontract.createAgreement(
             landlordName,
             tenantName,
             propertyAddress,
@@ -46,37 +97,26 @@ app.post("/createAgreement", async (req, res) => {
         );
 
         await tx.wait();
-
         res.json({ message: "Agreement created successfully", txHash: tx.hash });
+
     } catch (err) {
         console.error("Error creating agreement:", err);
         res.status(500).json({ error: err.message });
     }
 });
 
-
-
-
-// 🔹 API to sign agreement
+// 🔹 Sign Rental Agreement
 app.post("/signAgreement", async (req, res) => {
     try {
         const { tenantAddress } = req.body;
-        const tx = await contract.signAgreement(tenantAddress);
+        const tx = await RAcontract.signAgreement(tenantAddress);
         await tx.wait();
         res.json({ message: "Agreement signed successfully", txHash: tx.hash });
     } catch (err) {
+        console.error("Error signing agreement:", err);
         res.status(500).json({ error: err.message });
     }
 });
 
-// 🔹 API to get landlord address
-app.get("/landlord", async (req, res) => {
-    try {
-        const landlord = await contract.landlord();
-        res.json({ landlord });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
+// Start Express Server
 app.listen(5000, () => console.log("Server running on port 5000"));
